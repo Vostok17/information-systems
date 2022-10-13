@@ -1,0 +1,22 @@
+name: Check codebase formatting
+on: [push, pull_request]
+
+jobs:
+  format: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with: 
+          dotnet-version: "6.0.x"
+
+      - name: Build solution
+        run: dotnet build
+
+      - name: Install dotnet format tool 
+        run: dotnet tool update --global dotnet-format
+
+      - name: Perform format check
+        run: dotnet format --verify-no-changes --verbosity diagnostic
