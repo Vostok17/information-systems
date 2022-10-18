@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using GameLogic;
+﻿using Algorithms;
+using AutoMapper;
 using WebApi.Models;
 
 namespace WebApi.MappingProfiles

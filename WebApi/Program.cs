@@ -15,10 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameStateService, GameStateService>();
 
 // Add cors policy.
-builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-{
-    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+builder.Services.AddCors(p => p.AddPolicy(
+    "corspolicy",
+    build => build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()));
 
 // Add AutoMapper.
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
