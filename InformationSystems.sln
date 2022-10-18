@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Runner", "PathFinding\Runne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Algorithms", "PathFinding\Algorithms\Algorithms.csproj", "{E59BA2EA-2B0F-4855-9A40-9489BBBD5FA7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArcadeGame", "ArcadeGame", "{E4DBF2F0-6981-42A1-9A2C-A31F61383122}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{862630A4-3CEC-412E-8E01-CA62AAF9A67F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,10 @@ Global
 		{E59BA2EA-2B0F-4855-9A40-9489BBBD5FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E59BA2EA-2B0F-4855-9A40-9489BBBD5FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E59BA2EA-2B0F-4855-9A40-9489BBBD5FA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{862630A4-3CEC-412E-8E01-CA62AAF9A67F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{862630A4-3CEC-412E-8E01-CA62AAF9A67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{862630A4-3CEC-412E-8E01-CA62AAF9A67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{862630A4-3CEC-412E-8E01-CA62AAF9A67F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CC3E4E68-6E25-4A7F-9852-36F24FDB95B2} = {2D71722C-B556-48C9-8F7A-2DD0FC975CE9}
 		{E59BA2EA-2B0F-4855-9A40-9489BBBD5FA7} = {2D71722C-B556-48C9-8F7A-2DD0FC975CE9}
+		{862630A4-3CEC-412E-8E01-CA62AAF9A67F} = {E4DBF2F0-6981-42A1-9A2C-A31F61383122}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F7CC82B-0B2C-4790-80E7-489C8CF7B8EE}
