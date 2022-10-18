@@ -1,0 +1,5 @@
+{
+  "serverURL": "https://localhost:7080",
+  "cellSize": "40",
+  "objectSize": "30"
+}
