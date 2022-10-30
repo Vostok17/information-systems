@@ -31,10 +31,14 @@ const Row = styled.div`
 `;
 
 function Maze() {
+    const cellSize = Number(config.cellSize);
+    const objectSize = Number(config.objectSize);
+    const defaultPadding = (cellSize - objectSize) / 2;
+
     const [maze, setMaze] = useState([]);
     const [playerCoords, setPlayerCoords] = useState({
-        x: 5,
-        y: 5,
+        x: defaultPadding,
+        y: defaultPadding,
     });
 
     useEffect(() => {
@@ -42,79 +46,53 @@ function Maze() {
             const res = await axios.get(`${config.serverURL}/api/game`);
             const maze = convertToMatrix(
                 res.data.maze,
-                res.data.height,
-                res.data.width,
+                res.data.rows,
+                res.data.cols,
             );
             setMaze(maze);
         };
         loadMaze();
+        console.log('Maze loaded successfully');
     }, []);
 
-    const move = useCallback(
+    const movePlayer = useCallback(
         direction => {
-            const distance = Number(config.cellSize);
-
-            switch (direction) {
-                case 'up':
-                    setPlayerCoords({
-                        x: playerCoords.x,
-                        y: playerCoords.y - distance,
-                    });
-                    break;
-                case 'down':
-                    setPlayerCoords({
-                        x: playerCoords.x,
-                        y: playerCoords.y + distance,
-                    });
-                    break;
-                case 'left':
-                    setPlayerCoords({
-                        x: playerCoords.x - distance,
-                        y: playerCoords.y,
-                    });
-                    break;
-                case 'right':
-                    setPlayerCoords({
-                        x: playerCoords.x + distance,
-                        y: playerCoords.y,
-                    });
-                    break;
-                default:
-                    break;
+            const coordsChanges = {
+                'up': (x, y) => {
+                    return {
+                        x: x,
+                        y: y - cellSize,
+                    }
+                },
+                'down': (x, y) => {
+                    return {
+                        x: x,
+                        y: y + cellSize
+                    }
+                },
+                'left': (x, y) => {
+                    return {
+                        x: x - cellSize,
+                        y: y
+                    }
+                },
+                'right': (x, y) => {
+                    return {
+                        x: x + cellSize,
+                        y: y
+                    }
+                },
             }
-        },
-        [playerCoords.x, playerCoords.y],
-    );
 
-    const onKeyDown = useCallback(
-        e => {
-            switch (e.code) {
-                case 'ArrowUp':
-                    move('up');
-                    break;
-                case 'ArrowDown':
-                    move('down');
-                    break;
-                case 'ArrowLeft':
-                    move('left');
-                    break;
-                case 'ArrowRight':
-                    move('right');
-                    break;
-                default:
-                    console.log('Nothing!');
-                    break;
-            }
-        },
-        [move],
-    );
+            setPlayerCoords(coords => coordsChanges[direction](coords.x, coords.y))
+
+        }, [cellSize]);
 
     useEffect(() => {
-        document.addEventListener('keydown', onKeyDown);
-        return () => {
-            document.removeEventListener('keydown', onKeyDown);
-        };
-    }, [onKeyDown]);
+        
+        movePlayer('right')
+
+    }, [movePlayer])
 
     return (
         <Matrix>
