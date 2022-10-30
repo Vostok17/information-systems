@@ -1,4 +1,4 @@
-﻿namespace Algorithms
+﻿namespace PathFinding.Algorithms
 {
     public readonly struct Cell
     {

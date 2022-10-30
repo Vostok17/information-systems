@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Algorithms
+namespace PathFinding.Algorithms
 {
     public class Maze : IMaze
     {

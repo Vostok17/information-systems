@@ -1,6 +1,6 @@
 ﻿using static System.Math;
 
-namespace Algorithms
+namespace PathFinding.Algorithms
 {
     public abstract class BasePathFinder
     {
