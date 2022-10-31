@@ -4,8 +4,6 @@ namespace Game
 {
     public class GameInfo
     {
-
-
         public List<GameState> GameStates { get; } = new();
 
         public Maze? Maze { get; init; }
