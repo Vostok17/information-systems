@@ -1,5 +1,5 @@
-﻿using Algorithms;
-using AutoMapper;
+﻿using AutoMapper;
+using PathFinding.Algorithms;
 using WebApi.Models;
 using WebApi.Services.Interfaces;
 

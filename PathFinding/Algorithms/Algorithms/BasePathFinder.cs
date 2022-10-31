@@ -12,7 +12,7 @@ namespace PathFinding.Algorithms
 
         public int DistanceToNextCell { get; init; } = 10;
 
-        public abstract int Run(int[,] matrix, Cell src, Cell dest);
+        public abstract int Run(IMaze maze, Cell src, Cell dest);
 
         protected virtual void BacktracePath(Cell src, Node res)
         {

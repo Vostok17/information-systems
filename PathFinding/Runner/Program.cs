@@ -1,4 +1,4 @@
-﻿using Algorithms;
+﻿using PathFinding.Algorithms;
 using Runner;
 
 int[,] matrix =

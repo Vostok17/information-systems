@@ -8,6 +8,6 @@
 
         IMaze? Maze { get; }
 
-        int Run(int[,] matrix, Cell src, Cell dest);
+        int Run(IMaze maze, Cell src, Cell dest);
     }
 }

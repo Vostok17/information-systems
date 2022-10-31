@@ -11,9 +11,9 @@ namespace PathFinding.Algorithms
             _heuristics = heuristics ?? ManhattanHeuristics;
         }
 
-        public override int Run(int[,] matrix, Cell src, Cell dest)
+        public override int Run(IMaze maze, Cell src, Cell dest)
         {
-            Maze = new Maze(matrix);
+            Maze = maze;
 
             if (Maze[src] == 0 || Maze[dest] == 0)
             {
