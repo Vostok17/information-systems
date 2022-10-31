@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Game\Game.csproj" />
     <ProjectReference Include="..\PathFinding\Algorithms\Algorithms.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import config from '../config.json';
+
+const cellSize = Number(config.cellSize);
+const objectSize = Number(config.objectSize);
+const defaultPadding = (cellSize - objectSize) / 2;
 
 const Matrix = styled.div`
     display: flex;
@@ -14,9 +18,15 @@ const Player = styled.div`
     height: 30px;
     width: 30px;
     position: absolute;
-    top: ${props => props.coords.y + 'px'};
-    left: ${props => props.coords.x + 'px'};
+    top: ${props => defaultPadding + props.coords.x * cellSize + 'px'};
+    left: ${props => defaultPadding + props.coords.y * cellSize + 'px'};
 `;
+const Enemy = styled(Player)`
+    background-color: black;
+`;
+const Finish = styled(Player)`
+    background-color: brown;
+`
 const Cell = styled.div`
     background: ${props => (props.isWall ? 'crimson' : 'azure')};
     height: 40px;
@@ -30,20 +40,18 @@ const Row = styled.div`
     flex-direction: row;
 `;
 
-function Maze() {
-    const cellSize = Number(config.cellSize);
-    const objectSize = Number(config.objectSize);
-    const defaultPadding = (cellSize - objectSize) / 2;
-
+function Game() {
     const [maze, setMaze] = useState([]);
-    const [playerCoords, setPlayerCoords] = useState({
-        x: defaultPadding,
-        y: defaultPadding,
-    });
+    const [states, setStates] = useState([]);
+    const [currState, setCurrState] = useState({
+        player: { x: 0, y: 0 },
+        enemy: { x: 0, y: 0 },
+        finish: { x: 0, y: 0 },
+    })
 
     useEffect(() => {
         const loadMaze = async () => {
-            const res = await axios.get(`${config.serverURL}/api/game`);
+            const res = await axios.get(`${config.serverURL}/api/game/maze`);
             const maze = convertToMatrix(
                 res.data.maze,
                 res.data.rows,
@@ -55,48 +63,22 @@ function Maze() {
         console.log('Maze loaded successfully');
     }, []);
 
-    const movePlayer = useCallback(
-        direction => {
-            const coordsChanges = {
-                'up': (x, y) => {
-                    return {
-                        x: x,
-                        y: y - cellSize,
-                    }
-                },
-                'down': (x, y) => {
-                    return {
-                        x: x,
-                        y: y + cellSize
-                    }
-                },
-                'left': (x, y) => {
-                    return {
-                        x: x - cellSize,
-                        y: y
-                    }
-                },
-                'right': (x, y) => {
-                    return {
-                        x: x + cellSize,
-                        y: y
-                    }
-                },
-            }
-
-            setPlayerCoords(coords => coordsChanges[direction](coords.x, coords.y))
-
-        }, [cellSize]);
-
     useEffect(() => {
-        
-        movePlayer('right')
-
-    }, [movePlayer])
+        const loadStates = async () => {
+            const res = await axios.get(`${config.serverURL}/api/game/states`);
+            setStates(res.data)
+            setCurrState(res.data[0])
+        }
+        loadStates();
+        console.log('GameStates loaded successfully')
+    }, []);
 
     return (
         <Matrix>
-            <Player coords={playerCoords} />
+            <Player coords={currState.player} />
+            <Enemy coords={currState.enemy} />
+            <Finish coords={currState.finish} />
+            {console.log(currState.player, currState.enemy, currState.finish)}
             {maze.map((row, i) => (
                 <Row key={i}>
                     {row.map((col, j) => (
@@ -107,7 +89,6 @@ function Maze() {
         </Matrix>
     );
 }
-
 function convertToMatrix(strToConvert, rows, cols) {
     let matrix = new Array(rows);
     for (let index = 0; index < rows; index++) {
@@ -125,4 +106,4 @@ function convertToMatrix(strToConvert, rows, cols) {
     return matrix;
 }
 
-export default Maze;
+export default Game;

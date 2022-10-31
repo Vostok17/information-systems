@@ -1,10 +1,10 @@
 import './styles/App.css';
-import Maze from './components/Maze';
+import Game from './components/Game';
 
 function App() {
     return (
         <div className="App">
-            <Maze />
+            <Game />
         </div>
     );
 }
