@@ -24,7 +24,7 @@ IPathFinder[] algorithms =
 
 foreach (var algo in algorithms)
 {
-    int dist = algo.Run(matrix, source, dest);
+    int dist = algo.Run(new Maze(matrix), source, dest);
 
     Console.WriteLine(algo);
 

@@ -26,7 +26,7 @@ const Enemy = styled(Player)`
 `;
 const Finish = styled(Player)`
     background-color: brown;
-`
+`;
 const Cell = styled.div`
     background: ${props => (props.isWall ? 'crimson' : 'azure')};
     height: 40px;
@@ -47,7 +47,7 @@ function Game() {
         player: { x: 0, y: 0 },
         enemy: { x: 0, y: 0 },
         finish: { x: 0, y: 0 },
-    })
+    });
 
     useEffect(() => {
         const loadMaze = async () => {
@@ -66,11 +66,11 @@ function Game() {
     useEffect(() => {
         const loadStates = async () => {
             const res = await axios.get(`${config.serverURL}/api/game/states`);
-            setStates(res.data)
-            setCurrState(res.data[0])
-        }
+            setStates(res.data);
+            setCurrState(res.data[0]);
+        };
         loadStates();
-        console.log('GameStates loaded successfully')
+        console.log('GameStates loaded successfully');
     }, []);
 
     return (

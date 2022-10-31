@@ -1,5 +1,4 @@
 ﻿using PathFinding.Algorithms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Game
 {

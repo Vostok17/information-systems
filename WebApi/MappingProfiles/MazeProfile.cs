@@ -1,5 +1,5 @@
-﻿using PathFinding.Algorithms;
-using AutoMapper;
+﻿using AutoMapper;
+using PathFinding.Algorithms;
 using WebApi.Models;
 
 namespace WebApi.MappingProfiles
