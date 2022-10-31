@@ -4,18 +4,15 @@ namespace Game
 {
     public class GameInfo
     {
+
+
         public List<GameState> GameStates { get; } = new();
 
         public Maze? Maze { get; init; }
 
         public string Start()
         {
-            var state = new GameState
-            {
-                Player = RandomizeStartLocation(),
-                Enemy = RandomizeStartLocation(),
-                Finish = RandomizeStartLocation(),
-            };
+            GameState state = CreateInitialState();
             GameStates.Add(state);
 
             MiniMax miniMax = new MiniMax(Maze);
@@ -30,19 +27,30 @@ namespace Game
             return DetermineWinner(GameStates.Last());
         }
 
-        private Cell RandomizeStartLocation()
+        private GameState CreateInitialState()
         {
             Random rnd = new Random();
+            var closed = new List<Cell>();
 
-            Cell coords;
-            do
+            return new GameState
             {
-                coords = new Cell(rnd.Next(0, Maze.Rows), rnd.Next(0, Maze.Cols));
-                Console.WriteLine(coords + " === " + Maze[coords]);
-            }
-            while (Maze[coords] == 0);
+                Player = RandomizeCell(),
+                Enemy = RandomizeCell(),
+                Finish = RandomizeCell(),
+            };
 
-            return coords;
+            Cell RandomizeCell()
+            {
+                Cell cell;
+                do
+                {
+                    cell = new Cell(rnd.Next(0, Maze.Rows), rnd.Next(0, Maze.Cols));
+                }
+                while (closed.Contains(cell) || Maze[cell] == 0);
+
+                closed.Add(cell);
+                return cell;
+            }
         }
 
         private string DetermineWinner(GameState state)
