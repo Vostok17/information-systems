@@ -11,13 +11,13 @@ namespace PathFinding.Algorithms
             _heuristics = heuristics ?? ManhattanHeuristics;
         }
 
-        public override int Run(IMaze maze, Cell src, Cell dest)
+        public override (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest)
         {
             Maze = maze;
 
             if (Maze[src] == 0 || Maze[dest] == 0)
             {
-                return -1;
+                return (-1, null);
             }
 
             var open = new PriorityQueue<Node, int>();
@@ -37,8 +37,8 @@ namespace PathFinding.Algorithms
 
                 if (c.Equals(dest))
                 {
-                    BacktracePath(src, curr);
-                    return curr.Distance;
+                    var path = BacktracePath(src, curr);
+                    return (curr.Distance, path);
                 }
 
                 for (int i = 0; i < 8; i++)
@@ -55,7 +55,7 @@ namespace PathFinding.Algorithms
             }
             while (open.Count > 0);
 
-            return -1;
+            return (-1, null);
         }
 
         public override string ToString() => "A*";

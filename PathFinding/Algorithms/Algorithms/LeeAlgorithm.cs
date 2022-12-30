@@ -2,13 +2,13 @@
 {
     public class LeeAlgorithm : BasePathFinder, IPathFinder
     {
-        public override int Run(IMaze maze, Cell src, Cell dest)
+        public override (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest)
         {
             Maze = maze;
 
             if (Maze[src] == 0 || Maze[dest] == 0)
             {
-                return -1;
+                return (-1, null);
             }
 
             bool[,] visited = new bool[Maze.Rows, Maze.Cols];
@@ -27,8 +27,8 @@
 
                 if (c.Equals(dest))
                 {
-                    BacktracePath(src, curr);
-                    return curr.Distance;
+                    var path = BacktracePath(src, curr);
+                    return (curr.Distance, path);
                 }
 
                 for (int i = 0; i < 4; i++)
@@ -43,7 +43,7 @@
                 }
             }
 
-            return -1;
+            return (-1, null);
         }
 
         public override string ToString() => "Lee (Wave) Algorithm";

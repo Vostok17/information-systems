@@ -10,6 +10,8 @@
 
         int this[Cell p] { get; set; }
 
+        void Print(Cell player, Cell enemy, Cell Finish);
+
         string ToString();
     }
 }

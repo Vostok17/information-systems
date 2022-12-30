@@ -24,7 +24,7 @@ IPathFinder[] algorithms =
 
 foreach (var algo in algorithms)
 {
-    int dist = algo.Run(new Maze(matrix), source, dest);
+    var (dist, path) = algo.Run(new Maze(matrix), source, dest);
 
     Console.WriteLine(algo);
 
@@ -32,7 +32,7 @@ foreach (var algo in algorithms)
     {
         Console.WriteLine("Length of the Shortest Path is " + dist);
 
-        var drawer = new ConsolePathDrawer(algo.Maze!, algo.Path!);
+        var drawer = new ConsolePathDrawer(algo.Maze!, path!);
         drawer.Draw();
     }
     else

@@ -47,7 +47,8 @@
     "trailingComma": "all",
     "singleQuote": true,
     "arrowParens": "avoid",
-    "bracketSameLine": true
+    "bracketSameLine": true,
+    "tabWidth": 2
   },
   "stylelint": {
     "extends": "stylelint-config-prettier"

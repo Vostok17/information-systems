@@ -6,15 +6,11 @@ namespace PathFinding.Algorithms
     {
         public IMaze? Maze { get; protected set; }
 
-        public IEnumerable<Cell>? Path { get; protected set; }
-
-        public int? Distance { get; protected set; }
-
         public int DistanceToNextCell { get; init; } = 10;
 
-        public abstract int Run(IMaze maze, Cell src, Cell dest);
+        public abstract (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest);
 
-        protected virtual void BacktracePath(Cell src, Node res)
+        protected virtual IList<Cell> BacktracePath(Cell src, Node res)
         {
             Node curr = res;
             var path = new List<Cell>();
@@ -26,7 +22,7 @@ namespace PathFinding.Algorithms
             }
 
             path.Add(src);
-            Path = path;
+            return path;
         }
 
         protected bool IsInsideBounds(Cell c)

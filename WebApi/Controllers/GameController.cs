@@ -1,4 +1,4 @@
-﻿using Game;
+﻿using ArcadeGame;
 using Microsoft.AspNetCore.Mvc;
 using PathFinding.Algorithms;
 using WebApi.Models;
@@ -45,15 +45,11 @@ namespace WebApi.Controllers
             };
 
             Maze maze = new Maze(matrix);
+            Game game = new Game(maze);
 
-            var game = new GameInfo()
-            {
-                Maze = maze,
-            };
+            string result = game.Run();
 
-            game.Start();
-
-            return Ok(game.GameStates);
+            return Ok(new { Game = game.GameStates, game.Finish, Result = result });
         }
     }
 }

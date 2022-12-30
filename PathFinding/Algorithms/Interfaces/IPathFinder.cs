@@ -2,12 +2,8 @@
 {
     public interface IPathFinder
     {
-        int? Distance { get; }
-
-        IEnumerable<Cell>? Path { get; }
-
         IMaze? Maze { get; }
 
-        int Run(IMaze maze, Cell src, Cell dest);
+        (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest);
     }
 }

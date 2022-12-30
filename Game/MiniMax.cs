@@ -1,96 +1,138 @@
 ﻿using PathFinding.Algorithms;
+using static System.Math;
 
-namespace Game
+namespace ArcadeGame
 {
-    public class MiniMax
+    public class MiniMax<TState>
+        where TState : new()
     {
-        public MiniMax(Maze maze)
+        public MiniMax(
+            IMaze maze,
+            Predicate<TState> isGameOver,
+            Func<TState, bool, IEnumerable<TState>> expand,
+            Func<TState, int> evaluate)
         {
             Maze = maze;
+            IsGameOver = isGameOver;
+            Expand = expand;
+            Evaluate = evaluate;
         }
 
-        public Maze Maze { get; }
+        public IMaze Maze { get; }
 
-        public GameState? BestMove { get; private set; }
+        public Predicate<TState> IsGameOver { get; }
 
-        public int RunClassic(GameState state, int depth, bool maximizingPlayer)
+        public Func<TState, bool, IEnumerable<TState>> Expand { get; }
+
+        public Func<TState, int> Evaluate { get; }
+
+        public (int Eval, TState State) RunClassic(TState state, int depth, bool maximizingPlayer)
         {
-            if (depth == 0 || state.IsGameOver())
+            if (depth == 0 || IsGameOver(state))
             {
-                return StaticEvaluation(state);
+                int eval = Evaluate(state);
+                return (eval, state);
             }
+
+            var bestState = new TState();
 
             if (maximizingPlayer)
             {
                 int maxEval = int.MinValue;
-                foreach (var child in Expand(state))
+
+                foreach (var child in Expand(state, maximizingPlayer))
                 {
-                    int eval = RunClassic(child, depth - 1, false);
+                    (int eval, _) = RunClassic(child, depth - 1, false);
 
                     if (maxEval < eval)
                     {
                         maxEval = eval;
-                        BestMove = child;
+                        bestState = child;
                     }
                 }
 
-                return maxEval;
+                return (maxEval, bestState);
             }
             else
             {
                 int minEval = int.MaxValue;
-                foreach (var child in Expand(state))
+                foreach (var child in Expand(state, maximizingPlayer))
                 {
-                    int eval = RunClassic(child, depth - 1, true);
+                    (int eval, _) = RunClassic(child, depth - 1, true);
 
                     if (minEval > eval)
                     {
                         minEval = eval;
-                        BestMove = child;
+                        bestState = child;
                     }
                 }
 
-                return minEval;
+                return (minEval, bestState);
             }
         }
 
-        private int StaticEvaluation(GameState state)
+        public (int Eval, TState State) RunAlphaBeta(
+            TState state,
+            int depth,
+            int alpha,
+            int beta,
+            bool maximizingPlayer)
         {
-            var pathFinder = new AStar();
-
-            return -pathFinder.Run(Maze, state.Player, state.Finish);
-        }
-
-        private IEnumerable<GameState> Expand(GameState state)
-        {
-            int[] dx = { -1, 0, 0, 1 };
-            int[] dy = { 0, -1, 1, 0 };
-
-            var children = new List<GameState>();
-
-            Cell player = state.Player;
-
-            for (int i = 0; i < 4; i++)
+            if (depth == 0 || IsGameOver(state))
             {
-                Cell nextMove = new Cell(player.X + dx[i], player.Y + dy[i]);
-
-                if (IsInsideBounds(nextMove) && Maze[nextMove] == 1)
-                {
-                    children.Add(new GameState()
-                    {
-                        Player = nextMove,
-                        Enemy = state.Enemy,
-                        Finish = state.Finish,
-                    });
-                }
+                int eval = Evaluate(state);
+                return (eval, state);
             }
 
-            return children;
-        }
+            var bestState = new TState();
 
-        private bool IsInsideBounds(Cell c)
-        {
-            return c.X >= 0 && c.X < Maze!.Rows && c.Y >= 0 && c.Y < Maze.Cols;
+            if (maximizingPlayer)
+            {
+                int maxEval = int.MinValue;
+
+                foreach (var child in Expand(state, maximizingPlayer))
+                {
+                    (int eval, _) = RunAlphaBeta(child, depth - 1, alpha, beta, false);
+
+                    if (maxEval < eval)
+                    {
+                        maxEval = eval;
+                        bestState = child;
+                    }
+
+                    alpha = Max(alpha, eval);
+
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+
+                return (maxEval, bestState);
+            }
+            else
+            {
+                int minEval = int.MaxValue;
+                foreach (var child in Expand(state, maximizingPlayer))
+                {
+                    (int eval, _) = RunAlphaBeta(child, depth - 1, alpha, beta, true);
+
+                    if (minEval > eval)
+                    {
+                        minEval = eval;
+                        bestState = child;
+                    }
+
+                    beta = Min(beta, eval);
+
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+
+                return (minEval, bestState);
+            }
         }
     }
 }
