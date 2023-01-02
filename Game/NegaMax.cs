@@ -9,7 +9,7 @@ namespace ArcadeGame
             IMaze maze,
             Predicate<TState> isGameOver,
             Func<TState, bool, IEnumerable<TState>> expand,
-            Func<TState, bool, int> evaluate)
+            Func<TState, bool, float> evaluate)
         {
             Maze = maze;
             IsGameOver = isGameOver;
@@ -23,22 +23,22 @@ namespace ArcadeGame
 
         public Func<TState, bool, IEnumerable<TState>> Expand { get; }
 
-        public Func<TState, bool, int> Evaluate { get; }
+        public Func<TState, bool, float> Evaluate { get; }
 
-        public (int Eval, TState State) RunClassic(TState state, int depth, int color)
+        public (float Eval, TState State) RunClassic(TState state, int depth, int color)
         {
             if (depth == 0 || IsGameOver(state))
             {
-                int eval = color * Evaluate(state, color > 0);
+                float eval = color * Evaluate(state, color > 0);
                 return (eval, state);
             }
 
             var bestState = new TState();
-            int maxEval = int.MinValue;
+            float maxEval = float.NegativeInfinity;
 
             foreach (var child in Expand(state, color > 0))
             {
-                int eval = -RunClassic(child, depth - 1, -color).Eval;
+                float eval = -RunClassic(child, depth - 1, -color).Eval;
 
                 if (maxEval < eval)
                 {

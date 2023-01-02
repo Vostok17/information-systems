@@ -10,7 +10,7 @@ namespace ArcadeGame
             IMaze maze,
             Predicate<TState> isGameOver,
             Func<TState, bool, IEnumerable<TState>> expand,
-            Func<TState, bool, int> evaluate)
+            Func<TState, bool, float> evaluate)
         {
             Maze = maze;
             IsGameOver = isGameOver;
@@ -24,13 +24,13 @@ namespace ArcadeGame
 
         public Func<TState, bool, IEnumerable<TState>> Expand { get; }
 
-        public Func<TState, bool, int> Evaluate { get; }
+        public Func<TState, bool, float> Evaluate { get; }
 
-        public (int Eval, TState State) RunClassic(TState state, int depth, bool maximizingPlayer)
+        public (float Eval, TState State) RunClassic(TState state, int depth, bool maximizingPlayer)
         {
             if (depth == 0 || IsGameOver(state))
             {
-                int eval = Evaluate(state, maximizingPlayer);
+                float eval = Evaluate(state, maximizingPlayer);
                 return (eval, state);
             }
 
@@ -38,11 +38,11 @@ namespace ArcadeGame
 
             if (maximizingPlayer)
             {
-                int maxEval = int.MinValue;
+                float maxEval = float.NegativeInfinity;
 
                 foreach (var child in Expand(state, maximizingPlayer))
                 {
-                    int eval = RunClassic(child, depth - 1, false).Eval;
+                    float eval = RunClassic(child, depth - 1, false).Eval;
 
                     if (maxEval < eval)
                     {
@@ -55,10 +55,10 @@ namespace ArcadeGame
             }
             else
             {
-                int minEval = int.MaxValue;
+                float minEval = float.PositiveInfinity;
                 foreach (var child in Expand(state, maximizingPlayer))
                 {
-                    int eval = RunClassic(child, depth - 1, true).Eval;
+                    float eval = RunClassic(child, depth - 1, true).Eval;
 
                     if (minEval > eval)
                     {
@@ -71,16 +71,16 @@ namespace ArcadeGame
             }
         }
 
-        public (int Eval, TState State) RunAlphaBeta(
+        public (float Eval, TState State) RunAlphaBeta(
             TState state,
             int depth,
-            int alpha,
-            int beta,
+            float alpha,
+            float beta,
             bool maximizingPlayer)
         {
             if (depth == 0 || IsGameOver(state))
             {
-                int eval = Evaluate(state, maximizingPlayer);
+                float eval = Evaluate(state, maximizingPlayer);
                 return (eval, state);
             }
 
@@ -88,11 +88,11 @@ namespace ArcadeGame
 
             if (maximizingPlayer)
             {
-                int maxEval = int.MinValue;
+                float maxEval = float.NegativeInfinity;
 
                 foreach (var child in Expand(state, maximizingPlayer))
                 {
-                    int eval = RunAlphaBeta(child, depth - 1, alpha, beta, false).Eval;
+                    float eval = RunAlphaBeta(child, depth - 1, alpha, beta, false).Eval;
 
                     if (maxEval < eval)
                     {
@@ -112,10 +112,10 @@ namespace ArcadeGame
             }
             else
             {
-                int minEval = int.MaxValue;
+                float minEval = float.PositiveInfinity;
                 foreach (var child in Expand(state, maximizingPlayer))
                 {
-                    int eval= RunAlphaBeta(child, depth - 1, alpha, beta, true).Eval;
+                    float eval = RunAlphaBeta(child, depth - 1, alpha, beta, true).Eval;
 
                     if (minEval > eval)
                     {

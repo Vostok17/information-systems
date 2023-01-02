@@ -17,19 +17,17 @@ namespace ArcadeGame
 
         public string Run()
         {
-            GameState state = RandomizeInitialState();
-
             // Test state.
-            state = new GameState
+            var state = new GameState
             {
-                Player = new Cell(4, 8),
-                Enemy = new Cell(5, 8),
+                Player = new Cell(2, 8),
+                Enemy = new Cell(4, 6),
             };
-            Finish = new Cell(3, 2);
+            Finish = new Cell(2, 4);
 
             GameStates.Add(state);
 
-            var minimax = new NegaMax<GameState>(
+            var minimax = new MiniMax<GameState>(
                 Maze,
                 IsGameOver,
                 Expand,
@@ -37,7 +35,7 @@ namespace ArcadeGame
 
             do
             {
-                state = minimax.RunClassic(state, 10, 1).State;
+                state = minimax.RunClassic(state, 10, true).State;
                 GameStates.Add(state);
 
                 state = MoveEnemy(state);
@@ -117,15 +115,15 @@ namespace ArcadeGame
             return player.Equals(enemy) || player.Equals(Finish);
         }
 
-        private int StaticEvaluation(GameState state, bool isPlayer)
+        private float StaticEvaluation(GameState state, bool isPlayer)
         {
             var pathFinder = new LeeAlgorithm();
 
             int distanceToEnemy = pathFinder.Run(Maze, state.Player, state.Enemy).Path.Count;
 
-            if (distanceToEnemy <= 1)
+            if (distanceToEnemy == 0)
             {
-                return int.MinValue;
+                return float.MinValue;
             }
 
             if (!isPlayer)
@@ -135,9 +133,9 @@ namespace ArcadeGame
 
             int distanceToFinish = pathFinder.Run(Maze, state.Player, Finish).Path.Count;
 
-            if (distanceToFinish <= 1)
+            if (distanceToFinish == 0)
             {
-                return int.MaxValue - distanceToFinish;
+                return float.MaxValue;
             }
 
             return distanceToEnemy - distanceToFinish;
