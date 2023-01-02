@@ -24,21 +24,23 @@ IPathFinder[] algorithms =
 
 foreach (var algo in algorithms)
 {
-    var (dist, path) = algo.Run(new Maze(matrix), source, dest);
+    var maze = new Maze(matrix);
+    var (dist, path) = algo.Run(maze, source, dest);
 
     Console.WriteLine(algo);
 
-    if (dist != -1)
-    {
-        Console.WriteLine("Length of the Shortest Path is " + dist);
-
-        var drawer = new ConsolePathDrawer(algo.Maze!, path!);
-        drawer.Draw();
-    }
-    else
+    if (dist == -1)
     {
         Console.WriteLine("Shortest Path doesn't exist");
+        continue;
     }
+
+    Console.WriteLine("Length of the Shortest Path is " + dist);
+
+    path.Insert(0, source);
+
+    var drawer = new ConsolePathDrawer(maze, path);
+    drawer.Draw();
 
     Console.WriteLine();
 }

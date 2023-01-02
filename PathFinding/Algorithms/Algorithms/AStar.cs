@@ -11,7 +11,7 @@ namespace PathFinding.Algorithms
             _heuristics = heuristics ?? ManhattanHeuristics;
         }
 
-        public override (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest)
+        public override (int Distance, List<Cell>? Path) Run(IMaze maze, Cell src, Cell dest)
         {
             Maze = maze;
 
@@ -31,7 +31,7 @@ namespace PathFinding.Algorithms
             do
             {
                 Node curr = open.Dequeue();
-                Cell c = curr.Cell!;
+                Cell c = curr.Cell;
 
                 closed.Add(c);
 

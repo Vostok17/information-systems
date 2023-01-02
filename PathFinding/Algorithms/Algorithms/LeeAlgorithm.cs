@@ -2,7 +2,7 @@
 {
     public class LeeAlgorithm : BasePathFinder, IPathFinder
     {
-        public override (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest)
+        public override (int Distance, List<Cell> Path) Run(IMaze maze, Cell src, Cell dest)
         {
             Maze = maze;
 
@@ -23,7 +23,7 @@
             while (q.Count > 0)
             {
                 Node curr = q.Dequeue();
-                Cell c = curr.Cell!;
+                Cell c = curr.Cell;
 
                 if (c.Equals(dest))
                 {

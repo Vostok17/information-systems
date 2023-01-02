@@ -22,14 +22,14 @@ namespace ArcadeGame
             // Test state.
             state = new GameState
             {
-                Player = new Cell(9, 4),
-                Enemy = new Cell(4, 9),
+                Player = new Cell(4, 8),
+                Enemy = new Cell(5, 8),
             };
             Finish = new Cell(3, 2);
 
             GameStates.Add(state);
 
-            var minimax = new MiniMax<GameState>(
+            var minimax = new NegaMax<GameState>(
                 Maze,
                 IsGameOver,
                 Expand,
@@ -37,15 +37,14 @@ namespace ArcadeGame
 
             do
             {
-                (_, state) = minimax.RunAlphaBeta(state, 10, int.MinValue, int.MaxValue, true);
+                state = minimax.RunClassic(state, 10, 1).State;
                 GameStates.Add(state);
 
-                (_, state) = minimax.RunAlphaBeta(state, 3, int.MinValue, int.MaxValue, false);
+                state = MoveEnemy(state);
                 GameStates.Add(state);
             }
             while (!IsGameOver(state));
 
-            GameStates.RemoveAt(GameStates.Count - 1);
             return DetermineWinner(state);
         }
 
@@ -78,6 +77,20 @@ namespace ArcadeGame
             }
         }
 
+        private GameState MoveEnemy(GameState state)
+        {
+            var pathFinder = new LeeAlgorithm();
+
+            List<Cell> pathToPlayer = pathFinder.Run(Maze, state.Enemy, state.Player).Path;
+
+            if (pathToPlayer.Count > 0)
+            {
+                state.Enemy = pathToPlayer[0];
+            }
+
+            return state;
+        }
+
         private string DetermineWinner(GameState state)
         {
             if (state.Player.Equals(state.Enemy))
@@ -87,6 +100,9 @@ namespace ArcadeGame
 
             if (state.Player.Equals(Finish))
             {
+                // Remove last enemy's move because it's redunant.
+                GameStates.RemoveAt(GameStates.Count - 1);
+
                 return "Player won!";
             }
 
@@ -101,20 +117,30 @@ namespace ArcadeGame
             return player.Equals(enemy) || player.Equals(Finish);
         }
 
-        private int StaticEvaluation(GameState state)
+        private int StaticEvaluation(GameState state, bool isPlayer)
         {
             var pathFinder = new LeeAlgorithm();
 
-            var (distanceToEnemy, pathToEnemy) = pathFinder.Run(Maze, state.Player, state.Enemy);
+            int distanceToEnemy = pathFinder.Run(Maze, state.Player, state.Enemy).Path.Count;
 
-            if (pathToEnemy?.Count > 1)
+            if (distanceToEnemy <= 1)
             {
-                var (distanceToFinish, _) = pathFinder.Run(Maze, state.Player, Finish);
-
-                return distanceToEnemy - distanceToFinish;
+                return int.MinValue;
             }
 
-            return int.MinValue;
+            if (!isPlayer)
+            {
+                return distanceToEnemy;
+            }
+
+            int distanceToFinish = pathFinder.Run(Maze, state.Player, Finish).Path.Count;
+
+            if (distanceToFinish <= 1)
+            {
+                return int.MaxValue - distanceToFinish;
+            }
+
+            return distanceToEnemy - distanceToFinish;
         }
 
         private IEnumerable<GameState> Expand(GameState state, bool isPlayer)

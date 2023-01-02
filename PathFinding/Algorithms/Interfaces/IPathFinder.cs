@@ -4,6 +4,6 @@
     {
         IMaze? Maze { get; }
 
-        (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest);
+        (int Distance, List<Cell> Path) Run(IMaze maze, Cell src, Cell dest);
     }
 }

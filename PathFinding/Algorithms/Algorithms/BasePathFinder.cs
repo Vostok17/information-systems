@@ -8,20 +8,20 @@ namespace PathFinding.Algorithms
 
         public int DistanceToNextCell { get; init; } = 10;
 
-        public abstract (int Distance, IList<Cell>? Path) Run(IMaze maze, Cell src, Cell dest);
+        public abstract (int Distance, List<Cell> Path) Run(IMaze maze, Cell src, Cell dest);
 
-        protected virtual IList<Cell> BacktracePath(Cell src, Node res)
+        protected virtual List<Cell> BacktracePath(Cell src, Node res)
         {
             Node curr = res;
             var path = new List<Cell>();
 
-            while (!src.Equals(curr!.Cell))
+            while (!src.Equals(curr.Cell))
             {
-                path.Add(curr.Cell!);
-                curr = curr.Previous!;
+                path.Add(curr.Cell);
+                curr = curr.Previous;
             }
 
-            path.Add(src);
+            path.Reverse();
             return path;
         }
 
