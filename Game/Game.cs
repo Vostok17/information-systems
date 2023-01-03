@@ -27,7 +27,7 @@ namespace ArcadeGame
 
             GameStates.Add(state);
 
-            var minimax = new MiniMax<GameState>(
+            var minimax = new NegaMax<GameState>(
                 Maze,
                 IsGameOver,
                 Expand,
@@ -35,7 +35,7 @@ namespace ArcadeGame
 
             do
             {
-                state = minimax.RunClassic(state, 10, true).State;
+                state = minimax.RunAlphaBeta(state, 10, float.NegativeInfinity, float.PositiveInfinity, 1).State;
                 GameStates.Add(state);
 
                 state = MoveEnemy(state);
